@@ -285,7 +285,7 @@ layout = dict(title = 'Geographical Visualization of Happiness Score in 2021',
 choromap3 = go.Figure(data = [data], layout=layout)
 plot(choromap3, filename='画图/世界幸福度地图.html')
 ```
-![]()\
+![](/image/worldhappinessmap.png)\
 分析这张2021世界幸福度地图，我们可以看到：
 	可以看出北欧的幸福度最高，欧洲，北美洲，大洋洲的幸福度普遍很高。结合这些地区状况，我们可以推断其幸福度很高可能与其良好的社会福利与社会保障，较高的人均收入水平相关。
 	西亚尤其是阿富汗、南亚，非洲地区的幸福度普遍很低。结合地理知识，这些可能与其落后的经济水平，社会各方面发展水平相关，而西亚部分地区还存在战乱，这可能也是影响其幸福度的重要因素。
@@ -307,11 +307,12 @@ fig = px.bar(top10,
              title="World's happiest countries in 2021")
 fig.show()
 ```
-
+![](/image/幸福度前10名.png)
 可以看出，2021年世界幸福度排名前十的国家依次是：芬兰，丹麦，以色列，冰岛，瑞典，挪威，瑞士，荷兰，新西兰，澳大利亚。
-4.4.1.2 世界幸福度排名第一的国家
+###### 4.4.1.2 世界幸福度排名第一的国家
 下面我们来分析世界上最幸福的国家是哪个国家
 列出2005-2021历年最幸福的国家：
+```
 top_country_list = []
 for i in range(2005, 2022):
     # exec函数能执行函数中" "内的操作
@@ -340,8 +341,10 @@ df_topcountry
 14	Finland	2019	7.780348
 15	Finland	2020	7.88935
 16	Finland	2021	7.794378
+```
 可以看出Finland与Denmark各当过7次第一,为了进一步比较芬兰与丹麦谁更幸福，我们比较其2005-2021年的平均幸福度：
 世界各国的幸福度平均值从高到低排列：
+```
 Country name
 Denmark                     7.681457
 Finland                     7.611299
@@ -355,10 +358,12 @@ Central African Republic    3.514954
 Afghanistan                 3.505506
 South Sudan                 3.401875
 Name: Life Ladder, Length: 166, dtype: float64
+```
 可以看出，2005-2021年平均幸福度最高的是丹麦。
 综上，我们可以认为丹麦是2005-2021年最幸福的国家。
-4.4.2 幸福度排名最靠后国家
-4.4.2.1 2021幸福度排名后十位的国家
+##### 4.4.2 幸福度排名最靠后国家
+###### 4.4.2.1 2021幸福度排名后十位的国家
+```
 df_2021_sorted=df_2021.sort_values(by='Life Ladder',ascending=True)
 btm10=df_2021_sorted.head(10)[['Country name','Life Ladder']] #btm是bottom的缩写 
 btm10.index=range(1,top10.iloc[:,0].size+1)   
@@ -380,10 +385,11 @@ fig = px.bar(btm10,
              color="Country name", 
              title="World's least happiest countries in 2021")
 fig.show()
- 
+```
 
 2021幸福度排名后十位的国家依次是黎巴嫩、阿富汗、赞比亚、津巴布韦、印度、马拉维、坦桑尼亚、塞拉利昂、约旦、埃及。
-4.4.2.2 世界幸福度排名倒数第一的国家
+###### 4.4.2.2 世界幸福度排名倒数第一的国家
+```
 btm_country_list = []
 for i in range(2005, 2022):
     # exec函数能执行函数中" "内的操作
@@ -412,10 +418,12 @@ df_btmcountry
 14	Afghanistan	2019	2.375092
 15	Lebanon	2020	2.633753
 16	Lebanon	2021	2.178809
+```
 可以看出Togo一共排过4次倒数第一。
-4.5 分析中国幸福度数据
-4.5.1 中国幸福度世界排名
+#### 4.5 分析中国幸福度数据
+##### 4.5.1 中国幸福度世界排名
 首先获得从总的数据集中获取中国的数据，并且将数据的index设置为中国的历年幸福度排名：
+```
 China_rank_list=[]
 for i in range(2005, 2022):
     # exec函数能执行函数中" "内的操作
@@ -426,31 +434,13 @@ for i in range(2005, 2022):
 
 df_China_rank = pd.concat(China_rank_list)
 df_China_rank
-然后画出中国历年排名折线图：
-plt.rcParams['font.sans-serif'] = ['SimHei']  # 添加这条可以让图形显示中文
-
-x_axis_data = df_China_rank['year']
-y_axis_data = df_China_rank.index
-
-# plot中参数的含义分别是横轴值，纵轴值，线条格式，颜色，透明度,线的宽度和标签
-plt.plot(x_axis_data, y_axis_data, 'ro-', color='blue',
-         alpha=1, linewidth=1, label='China happiness ranking')
- 
-# 给这个折线图中的点加数据标签
-for x, y in zip(x_axis_data, y_axis_data):
-    plt.text(x, y+0.3, '%.0f'%y, ha='center', va='bottom', fontsize=12)
-    # Add the text *s* to the Axes at location *x*, *y*(x,y)
- 
-# 显示标签，如果不加这句，即使加了label='一些数字'的参数，最终还是不会显示标签
-plt.legend(loc="best")
-plt.xlabel('年份')
-plt.ylabel('中国幸福度世界排名')
-plt.title("2005-2021中国幸福度世界排名", fontdict={'size': 25})
-plt.show()
+```
+然后画出中国历年排名折线图：\
+![](/image/chinarank.png)
  
 
 可以看出中国的世界幸福度排名在58名到94名的区间内，而2020年幸福度排名忽然从91名上升到了58名,这或许与中国在疫情防控方面取得的成就有关。
-4.5.2 中国怎样提升幸福度
+##### 4.5.2 中国怎样提升幸福度
 了解到了中国的幸福度世界排名后，我们自然而然地想到一个问题，即中国最容易从哪个方面下手来提升幸福度。
 为此，我们先分析中国各项指标与世界平均水平的差异(因为单单分析中国的数据，数据量较少，为了保障比较的客观准确，我们这里采用未经过补全的原始数据)：
 world_mean=df_all_1.mean()
@@ -461,6 +451,7 @@ print(gap)
 
 
 中国各项指标平均值-世界平均水平：
+```
 year                                -0.227621
 Life Ladder                         -0.374812
 Log GDP per capita                  -0.070427
@@ -473,6 +464,7 @@ Positive affect                      0.039517
 Negative affect                     -0.102264
 Confidence in national government         NaN
 dtype: float64
+```
 可以看出：
 1.中国在2005-2021年的平均幸福度低于世界平均水平
 2.做得好的方面：中国的Healthy life expectancy at birth,Freedom to make life choices,Positive affect高于平均水平，Negative affect低于世界平均水平(注意Negative affect与幸福度是负相关的)
@@ -502,13 +494,30 @@ dtype: float64
 	Generosity:0(因为线性模型里没考虑这个因素，其权重为0)
 	综上分析，中国最容易通过提升Social support来提升整体幸福度。
 
+## 项目总结与反思
 
-## 使用方法
+本项目基于世界幸福度数据以及一些影响幸福度的指标数据，进行了深入分析，得出了以下主要结论：
 
-1. 下载项目代码和数据集。
-2. 在Python环境中运行 `analysis.ipynb` Jupyter Notebook 文件，按照代码步骤进行数据分析。
+### 1. 影响幸福度的因素
+- 幸福度与经济水平（Log GDP per capita）、社会支持（Social support）、健康预期寿命（Healthy life expectancy at birth）、自由度（Freedom to make life choices）、积极情感（Positive affect）呈中度正相关，与腐败程度（Perceptions of corruption）、消极情感（Negative affect）呈中度负相关，与年份（year）、国家名称（Country name）、慷慨度（Generosity）、对国家政府的信任程度（Confidence in national government）几乎无关。
 
-## 参考
-- [世界幸福度报告官网](https://worldhappiness.report/)
+- 根据拟合得到的公式，判定系数接近0.8，说明拟合效果较好。
 
-欢迎查看和贡献代码！如果您有任何问题或建议，请在Issues中提出。
+### 2. 幸福度的地区差异
+- 北欧国家的幸福度最高，欧洲、北美洲、大洋洲的幸福度普遍较高。西亚尤其是阿富汗、南亚、非洲地区的幸福度普遍较低。西亚的阿拉伯半岛地区、非洲的好望角地区的幸福度相对较高。中亚、东亚、北亚、东南亚、以及南美洲的幸福度也较为良好。
+
+### 3. 中国幸福度水平
+- 2021年，中国的世界幸福度排名在58到94位之间。通过提升社会支持（Social support）来提升中国的整体幸福度是最有效的途径。
+
+### 4. 可以提升的方面
+- 可以考虑使用多维的k均值聚类算法，将世界上不同国家的平均指标数据分类，以便发现高幸福度国家间的共同点与低幸福度国家间的共同点，从而更好地理解幸福度的影响因素。
+- 进一步探讨如何量化提升各个指标所需要付出的成本，需要更多的社会学和经济学知识，是一个较为复杂的问题。
+
+### 5. 参考文献
+- [全球幸福指数报告](https://baike.baidu.com/item/%E5%85%A8%E7%90%83%E5%B9%B8%E7%A6%8F%E6%8C%87%E6%95%B0%E6%8A%A5%E5%91%8A)
+- [世界快乐报告](https://zh.wikipedia.org/zh-cn/%E4%B8%96%E7%95%8C%E5%BF%AB%E6%A8%82%E5%A0%B1%E5%91%8A)
+- [World Happiness Report](https://worldhappiness.report/ed/2022/)
+
+以上结论和分析为个人观点，仅供参考。
+
+

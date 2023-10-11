@@ -156,23 +156,26 @@ factors1 = ['Life Ladder',
             'Negative affect']
 sns.pairplot(df_all_4,vars=factors1,kind='reg',diag_kind='hist')
  ```
-
+![](/image/pairplot1.png)
 散点图中的点分布得越离散，表明这两个变量间的相关性越弱，越聚集在一条直线附近，表明这两个变量的线性相关性越强。
 通过以上散点图，我们可以直观地看到哪些变量间的相关性更强，但是为了更好地量化变量间的相关性，我们需要用相关系数来准确地进一步衡量变量间的相关性。
 ##### 4.1.2 相关系数图
+```
 sns.heatmap(df_all_4.corr(), annot=True, cmap="YlGnBu");
- 
-
+```
+![](/image/heatmap.png)\
 (相关系数：0.8以上高度相关； 0.5-0.8 中度相关； 0.3-0.5 低度相关； 小于0.3 极弱，可视为不相关。)
 
-可以看出：
-1.年份与除了自身外的因素的相关系数均小于0.3，可以认为年份对Life Ladder等指标几乎没影响，所以不需要分年份来进行分析
-2.Country name与除了自身外的因素均远远小于0.3，认为Country name对Life Ladder等指标没影响，所以不需要分国家来进行分析
-3.Life Ladder(幸福度)与Log GDP per capita,Social support,Healthy life expectancy at birth,Freedom to make life choices,Positive affect中度正相关，与Perceptions of corruption,Negative affect中度负相关，与year,Country name,Generosity,Confidence in national government几乎无关
+可以看出：\
+1.年份与除了自身外的因素的相关系数均小于0.3，可以认为年份对Life Ladder等指标几乎没影响，所以不需要分年份来进行分析\
+2.Country name与除了自身外的因素均远远小于0.3，认为Country name对Life Ladder等指标没影响，所以不需要分国家来进行分析\
+3.Life Ladder(幸福度)与Log GDP per capita,Social support,Healthy life expectancy at birth,Freedom to make life choices,Positive affect中度正相关，与Perceptions of corruption,Negative affect中度负相关，与year,Country name,Generosity,Confidence in national government几乎无关\
 4.Life Ladder,Log GDP per capita,Social support,Healthy life expectancy at birth这几个指标两两间的相关性都很高
-4.2 建立多元线性回归模型
-4.2.1 去掉无关因素
+
+#### 4.2 建立多元线性回归模型
+##### 4.2.1 去掉无关因素
 由'4.1.1'的分析可知，Life Ladder与year,Country name,Generosity,Confidence in national government几乎无关，所以在建立预测Life Ladder的多元线性回归模型时可以不考虑这几个因素。
+```
 #回归模型
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
@@ -187,6 +190,7 @@ x = df_all_4[[column for column in ['Log GDP per capita',
                                     'Negative affect']]]
 #既然Life Ladder(幸福度)与year,Country name,Generosity,Confidence in national government几乎#无关，那么预测模型里不用这几个参数
 y = df_all_4['Life Ladder']
+```
 ##### 4.2.2 确定训练集测试集数据量
 虽说我们处于“大数据”时代，数据唾手可得，但是数据也是很珍贵的资源，对于数据工程来说快速生成一个比较准确的模型是主要任务，有的时候可能由于客观条件限制无法继续获得数据，这时候对于我们手中已有的数据，需要进行合理的划分：一部分用于训练模型（训练集）；另一部分用于测试模型（测试集）。
 例如我们读取鸢尾花数据集（Scikit-Learn库中也自带该数据集），目标是根据花的四个特征确定是哪一种鸢尾花。那么每条数据包含四个浮点数和一个文字标签，我们把全部数据分为训练集和测试集，先使用训练集训练出模型，再将测试集的每一条数据输入模型，对比模型输出与理想输出是否一致。

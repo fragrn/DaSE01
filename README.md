@@ -196,12 +196,13 @@ y = df_all_4['Life Ladder']
 例如我们读取鸢尾花数据集（Scikit-Learn库中也自带该数据集），目标是根据花的四个特征确定是哪一种鸢尾花。那么每条数据包含四个浮点数和一个文字标签，我们把全部数据分为训练集和测试集，先使用训练集训练出模型，再将测试集的每一条数据输入模型，对比模型输出与理想输出是否一致。
 小规模数据集（万数量级以下）训练集与测试集的划分比例一般为7:3或8:2；大规模数据集训练集与测试集的划分比例一般为98:2或99:1。
 本实例中总数据量为2089条，数据量较小，故采用训练集:测试集=8:2。
+```
 x_train, x_test, y_train, y_test = train_test_split(
     x, y, test_size=0.2, shuffle=True)  # shuffle参数用于“洗牌”，打乱原始的数据行排列顺序
 print('全体数据量：', len(x))
 print('训练集数据量：', len(x_train))
 print('测试集数据量：', len(x_test))
-
+```
 
 全体数据量： 2089
 训练集数据量： 1671
@@ -213,6 +214,7 @@ MSE的计算公式如下：
 MSE = ∑(y_i - ŷ_i)^2 / n
 其中，y_i表示实际输出，ŷ_i表示模型的预测输出，n表示样本数量。
 MSE的值越小，说明模型的预测精度越高。因此，在训练机器学习模型时，通常会使用MSE作为损失函数，并不断优化模型的参数来尽可能减小MSE的值。
+```
 model=LinearRegression()
 model.fit(x_train,y_train)
 y_test_predict=model.predict(x_test)
@@ -220,19 +222,23 @@ mse=mean_squared_error(y_test,y_test_predict)
 print("%0.2f"%mse)
 
 0.29
+```
 然而，MSE的值本身并不能给出模型的精确程度，因为MSE值受数据范围的影响。例如，如果数据范围很大，即y_i和ŷ_i的差值可能很大，那么即使模型的预测精度很高，MSE的值也可能较大。因此，在评估模型精度时，通常需要将MSE值与数据范围进行比较，以确定MSE值是否较小。
-4.2.3.2 判定系数进行评估
+###### 4.2.3.2 判定系数进行评估
 判定系数（Coefficient of Determination）是一种度量机器学习模型预测精度的指标。判定系数的值越接近1，表明模型的预测精度越高；判定系数的值越接近0，表明模型的预测精度越低。因此，判定系数可以用来衡量模型的预测精度，并为模型的选择和调优提供依据。
 判定系数的计算公式如下：
 R² = 1 - MSE / (∑(y_i - ȳ)^2 / n)
 其中，MSE表示模型的均方误差，y_i表示实际输出，ȳ表示实际输出的平均值，n表示样本数量。
+```
 r2=r2_score(y_test,y_test_predict)
 print(r2)
 
 0.7700766885150759
+```
 该模型的判定系数接近0.8，可以看出模型预测效果较好。
-4.2.4 Life Ladder预测模型
+##### 4.2.4 Life Ladder预测模型
 在检验了模型的准确度后，我们查看该模型的各个参数
+```
 model.coef_
 
 array([ 0.37544935,  1.87352459,  0.02849311,  0.53045315, -0.60620074,
@@ -243,12 +249,15 @@ array([ 0.37544935,  1.87352459,  0.02849311,  0.53045315, -0.60620074,
 model.intercept_
 
 -2.744711029852029
-最后得出的拟合公式为：Life Ladder=0.37544935*Log GDP per capita+1.87352459*Social support+0.02849311*Healthy life expectancy at birth+0.53045315*Freedom to make life choices-0.60620074*Perceptions of corruption+2.24988852*Positive affect-0.12408741*Negative affect-2.744711029852029
+```
+**最后得出的拟合公式为：**\
+**Life Ladder=0.37544935 * Log GDP per capita+1.87352459 * Social support+0.02849311 * Healthy life expectancy at birth+0.53045315 * Freedom to make life choices-0.60620074 * Perceptions of corruption+2.24988852 * Positive affect-0.12408741 * Negative affect-2.744711029852029**
 
 #### 4.3 世界幸福度地图
 此处我们画出2021年的世界幸福度地图，有助于我们比较2021年世界不同地区的幸福度差异，可以直观地看出世界各地区的幸福度水平。
 首先需要从总的数据中提取2021年的数据：
 我们先得到2005-2021的分年份的dataframe，即df_2005,df_2006,...,df_2021。
+```
 dfyear_list = []
 for i in range(2005, 2022):
     dfyear_list.append('df_'+ str(i))
@@ -257,9 +266,11 @@ for i in range(2005, 2022):
     exec("%s = df_all_3.loc[df_all_3['year']==%d]" %(dfyear_list[i-2005],i))
     exec("%s.index=range(0,%s.iloc[:,0].size)"%(dfyear_list[i-2005],dfyear_list[i-2005]))
     exec("%s.to_csv('data_groupby_year/%s')"%(dfyear_list[i-2005], 'df_'+str(i)+'.csv'))
+```
 这样以后即可得到每年的数据。
 
 再用df_2021来绘制2021年的世界幸福度地图(也可用其他年份的数据来绘制其他年份对应的世界幸福度地图)：
+```
 data = dict(type = 'choropleth', 
            locations = df_2021['Country name'],
            locationmode = 'country names',
@@ -273,17 +284,18 @@ layout = dict(title = 'Geographical Visualization of Happiness Score in 2021',
 
 choromap3 = go.Figure(data = [data], layout=layout)
 plot(choromap3, filename='画图/世界幸福度地图.html')
- 
-
+```
+![]()\
 分析这张2021世界幸福度地图，我们可以看到：
 	可以看出北欧的幸福度最高，欧洲，北美洲，大洋洲的幸福度普遍很高。结合这些地区状况，我们可以推断其幸福度很高可能与其良好的社会福利与社会保障，较高的人均收入水平相关。
 	西亚尤其是阿富汗、南亚，非洲地区的幸福度普遍很低。结合地理知识，这些可能与其落后的经济水平，社会各方面发展水平相关，而西亚部分地区还存在战乱，这可能也是影响其幸福度的重要因素。
 	西亚的阿拉伯半岛地区，非洲的好望角地区幸福度比其周围普遍偏低的幸福度高出不少，因为西亚的阿拉伯地区盛产石油，而非洲的好望角地区是重要的航道结点。
 	中亚，东亚，北亚，东南亚，以及南美洲幸福度良好。
-4.4 幸福度排名靠前与靠后国家
-4.4.1 幸福度排名最靠前国家
-4.4.1.1 2021年幸福度排名前十国家
+#### 4.4 幸福度排名靠前与靠后国家
+##### 4.4.1 幸福度排名最靠前国家
+###### 4.4.1.1 2021年幸福度排名前十国家
 首先列出2021年世界幸福度排名前10的国家
+```
 df_2021_sorted=df_2021.sort_values(by='Life Ladder',ascending=False)
 top10=df_2021_sorted.head(10)[['Country name','Life Ladder']] 
 top10.index=range(1,top10.iloc[:,0].size+1)
@@ -294,7 +306,7 @@ fig = px.bar(top10,
              color="Country name", 
              title="World's happiest countries in 2021")
 fig.show()
- 
+```
 
 可以看出，2021年世界幸福度排名前十的国家依次是：芬兰，丹麦，以色列，冰岛，瑞典，挪威，瑞士，荷兰，新西兰，澳大利亚。
 4.4.1.2 世界幸福度排名第一的国家
